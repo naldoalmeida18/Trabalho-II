@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz de JavaScript</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+}
+
+body {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    background-color: #f0f8ff;
+}
+
+.container {
+    width: 90%;
+    max-width: 600px;
+    text-align: center;
+}
+
+h1 {
+    color: #333;
+    margin-bottom: 20px;
+}
+
+#quiz-container {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+#question {
+    font-size: 1.2em;
+    margin-bottom: 20px;
+}
+
+.choice {
+    display: block;
+    margin: 10px 0;
+    padding: 10px;
+    background-color: #eee;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.choice:hover {
+    background-color: #ddd;
+}
+
+#next-button {
+    display: none;
+    margin-top: 20px;
+    padding: 10px 20px;
+    border: none;
+    background-color: #4CAF50;
+    color: white;
+    font-size: 1em;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: background-color 0.3s;
+}
+
+#next-button:hover {
+    background-color: #45a049;
+}
+
+.hidden {
+    display: none;
+}
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Quiz de JavaScript</h1>
+        <div id="quiz-container">
+            <p id="question"></p>
+            <div id="choices"></div>
+            <button id="next-button">Próxima Pergunta</button>
+            <p id="score" class="hidden"></p>
+        </div>
+    </div>
+    <script>
+        const questions = [
+    {
+        question: "Qual é o resultado de '2' + 2 em JavaScript?",
+        choices: ["4", "'22'", "NaN", "Erro"],
+        answer: "'22'"
+    },
+    {
+        question: "Qual palavra-chave é usada para declarar uma variável que não pode ser alterada?",
+        choices: ["var", "let", "const", "static"],
+        answer: "const"
+    },
+    {
+        question: "Qual método é usado para selecionar um elemento pelo ID no DOM?",
+        choices: ["getElementByClassName", "getElementById", "querySelectorAll", "getElementsByTagName"],
+        answer: "getElementById"
+    },
+    {
+        question: "Qual destas estruturas de repetição existe em JavaScript?",
+        choices: ["foreach", "for", "repeat", "loop"],
+        answer: "for"
+    },
+    {
+        question: "O que significa JSON?",
+        choices: ["JavaScript Oriented Notation", "Java Simple Object Notation", "JavaScript Object Notation", "Java Serialized Object Notation"],
+        answer: "JavaScript Object Notation"
+    }
+];
+
+let currentQuestionIndex = 0;
+let score = 0;
+
+const questionElement = document.getElementById('question');
+const choicesElement = document.getElementById('choices');
+const nextButton = document.getElementById('next-button');
+const scoreElement = document.getElementById('score');
+
+function showQuestion() {
+    const currentQuestion = questions[currentQuestionIndex];
+    questionElement.innerText = currentQuestion.question;
+    choicesElement.innerHTML = '';
+
+    currentQuestion.choices.forEach(choice => {
+        const button = document.createElement('button');
+        button.innerText = choice;
+        button.classList.add('choice');
+        button.addEventListener('click', () => selectAnswer(choice));
+        choicesElement.appendChild(button);
+    });
+
+    nextButton.style.display = 'none';
+}
+
+function selectAnswer(selectedChoice) {
+    const currentQuestion = questions[currentQuestionIndex];
+    if (selectedChoice === currentQuestion.answer) {
+        score++;
+    }
+    Array.from(choicesElement.children).forEach(button => {
+        button.disabled = true;
+        if (button.innerText === currentQuestion.answer) {
+            button.style.backgroundColor = '#4CAF50';
+        } else if (button.innerText === selectedChoice) {
+            button.style.backgroundColor = '#f44336';
+        }
+    });
+
+    nextButton.style.display = 'block';
+}
+
+nextButton.addEventListener('click', () => {
+    currentQuestionIndex++;
+    if (currentQuestionIndex < questions.length) {
+        showQuestion();
+    } else {
+        showScore();
+    }
+});
+
+function showScore() {
+    questionElement.classList.add('hidden');
+    choicesElement.classList.add('hidden');
+    nextButton.classList.add('hidden');
+    scoreElement.innerText = `Você acertou ${score} de ${questions.length} perguntas!`;
+    scoreElement.classList.remove('hidden');
+}
+
+showQuestion();
+
+    </script>
+</body>
+</html>
